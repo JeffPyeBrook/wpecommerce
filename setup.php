@@ -22,8 +22,10 @@ final class MAKEPLUS_Component_WooCommerce_Setup extends MAKEPLUS_Util_Modules i
 	protected $dependencies = array(
 		'mode'          => 'MAKEPLUS_Setup_ModeInterface',
 		'compatibility' => 'MAKEPLUS_Compatibility_MethodsInterface',
-		'legacy_color'  => 'MAKEPLUS_Component_WooCommerce_LegacyColorInterface',
+		'builder'       => 'MAKE_Builder_SetupInterface',
+//		'legacy_color'  => 'MAKEPLUS_Component_WooCommerce_LegacyColorInterface',
 		'wc'            => 'WooCommerce',
+//		'theme'         => 'MAKE_APIInterface',
 	);
 
 	/**
@@ -63,18 +65,18 @@ final class MAKEPLUS_Component_WooCommerce_Setup extends MAKEPLUS_Util_Modules i
 	 */
 	public function __construct( MAKEPLUS_APIInterface $api = null, array $modules = array() ) {
 		// Detect WooCommerce plugin version
-		if ( defined( 'WC_VERSION' ) ) {
-			$this->wc_version = WC_VERSION;
+		if ( defined( 'WPEC_VERSION' ) ) {
+			$this->wc_version = null;//WPEC_VERSION;
 		}
 
-		// Remove legacy color dependency if WC version is 2.3 or higher.
-		if ( is_null( $this->wc_version ) || version_compare( $this->wc_version, '2.3', '>=' ) ) {
-			unset( $this->dependencies['legacy_color'] );
-		} else {
-			$modules = wp_parse_args( $modules, array(
-				'legacy_color' => 'MAKEPLUS_Component_WooCommerce_LegacyColor',
-			) );
-		}
+//		// Remove legacy color dependency if WC version is 2.3 or higher.
+//		if ( is_null( $this->wc_version ) || version_compare( $this->wc_version, '2.3', '>=' ) ) {
+//			unset( $this->dependencies['legacy_color'] );
+//		} else {
+//			$modules = wp_parse_args( $modules, array(
+//				'legacy_color' => 'MAKEPLUS_Component_WooCommerce_LegacyColor',
+//			) );
+//		}
 
 		// Module defaults.
 		if ( function_exists( 'WC' ) ) {
@@ -86,8 +88,8 @@ final class MAKEPLUS_Component_WooCommerce_Setup extends MAKEPLUS_Util_Modules i
 		// Load dependencies
 		parent::__construct( $api, $modules );
 
-		// Detect WooCommerce Colors plugin
-		$this->colors_plugin = $this->mode()->is_plugin_active( 'woocommerce-colors/woocommerce-colors.php' );
+//		// Detect WooCommerce Colors plugin
+//		$this->colors_plugin = $this->mode()->is_plugin_active( 'woocommerce-colors/woocommerce-colors.php' );
 
 		// Add the Make API if it's available
 		if ( $this->mode()->has_make_api() ) {
@@ -106,6 +108,11 @@ final class MAKEPLUS_Component_WooCommerce_Setup extends MAKEPLUS_Util_Modules i
 		if ( $this->is_hooked() ) {
 			return;
 		}
+
+		add_filter( 'make_section_defaults', array( $this, 'section_defaults' ) );
+
+		// Register section choices
+		add_filter( 'make_section_choices', array( $this, 'section_choices' ), 10, 3 );
 
 		// Passive mode. Only enable the shortcode.
 		if ( 'active' !== $this->mode()->get_mode() ) {
@@ -183,8 +190,7 @@ final class MAKEPLUS_Component_WooCommerce_Setup extends MAKEPLUS_Util_Modules i
 	 * @return string
 	 */
 	public function handle_shortcode( $atts ) {
-		$shortcode = new MAKEPLUS_Component_WooCommerce_Shortcode( null, array( 'compatibility' => $this->compatibility(), 'wc' => $this->wc() ) );
-
+		$shortcode = new MAKEPLUS_Component_WooCommerce_Shortcode( null, array() );
 		return $shortcode->shortcode_product_grid( $atts );
 	}
 
@@ -208,39 +214,39 @@ final class MAKEPLUS_Component_WooCommerce_Setup extends MAKEPLUS_Util_Modules i
 				// Only enqueue if there is at least one Products section.
 				if ( ! empty( $matched_sections ) ) {
 					// Styles
-					if ( version_compare( $this->wc_version, '2.3', '>=' ) ) {
-						wp_enqueue_style(
-							'makeplus-woocommerce-frontend',
-							makeplus_get_plugin_directory_uri() . 'css/woocommerce/frontend.css',
-							array(),
-							MAKEPLUS_VERSION
-						);
+//					if ( version_compare( $this->wc_version, '2.3', '>=' ) ) {
+//						wp_enqueue_style(
+//							'makeplus-woocommerce-frontend',
+//							makeplus_get_plugin_directory_uri() . 'css/woocommerce/frontend.css',
+//							array(),
+//							MAKEPLUS_VERSION
+//						);
 
 						// If current theme is a child theme of Make, load the stylesheet
 						// before the child theme stylesheet so styles can be customized.
 						if ( $this->has_module( 'theme' ) && is_child_theme() ) {
 							$this->theme()->scripts()->add_dependency( 'make-main', 'makeplus-woocommerce-frontend', 'style' );
 						}
-					}
+//					}
 				}
 			}
 		}
 
 		// Legacy styles
-		if ( version_compare( $this->wc_version, '2.3', '<' ) ) {
-			wp_enqueue_style(
-				'makeplus-woocommerce-legacy',
-				makeplus_get_plugin_directory_uri() . 'css/woocommerce/legacy/woocommerce.css',
-				array( 'woocommerce-general', 'woocommerce-smallscreen', 'woocommerce-layout' ),
-				MAKEPLUS_VERSION
-			);
-
-			// If current theme is a child theme of Make, load the stylesheet
-			// before the child theme stylesheet so styles can be customized.
-			if ( $this->has_module( 'theme' ) && is_child_theme() ) {
-				$this->theme()->scripts()->add_dependency( 'make-main', 'makeplus-woocommerce-legacy', 'style' );
-			}
-		}
+//		if ( version_compare( $this->wc_version, '2.3', '<' ) ) {
+//			wp_enqueue_style(
+//				'makeplus-woocommerce-legacy',
+//				makeplus_get_plugin_directory_uri() . 'css/woocommerce/legacy/woocommerce.css',
+//				array( 'woocommerce-general', 'woocommerce-smallscreen', 'woocommerce-layout' ),
+//				MAKEPLUS_VERSION
+//			);
+//
+//			// If current theme is a child theme of Make, load the stylesheet
+//			// before the child theme stylesheet so styles can be customized.
+//			if ( $this->has_module( 'theme' ) && is_child_theme() ) {
+//				$this->theme()->scripts()->add_dependency( 'make-main', 'makeplus-woocommerce-legacy', 'style' );
+//			}
+//		}
 	}
 
 	/**
@@ -278,6 +284,7 @@ final class MAKEPLUS_Component_WooCommerce_Setup extends MAKEPLUS_Util_Modules i
 	 * @return bool
 	 */
 	public function is_shop( $is_shop ) {
+		return false;
 		if (
 			is_shop()
 			||
@@ -307,9 +314,9 @@ final class MAKEPLUS_Component_WooCommerce_Setup extends MAKEPLUS_Util_Modules i
 		$parent_post_type = ( $post instanceof WP_Post ) ? get_post_type( $post->post_parent ) : '';
 
 		if (
-			is_product()
-			||
-			( is_attachment() && 'product' === $parent_post_type )
+//			is_product()
+//			||
+			( is_attachment() && 'wpsc_product' === $parent_post_type )
 		) {
 			$is_product = true;
 		}
@@ -450,9 +457,9 @@ final class MAKEPLUS_Component_WooCommerce_Setup extends MAKEPLUS_Util_Modules i
 	public function admin_enqueue( $hook_suffix ) {
 		// Have to be careful with this test because this function was introduced in Make 1.2.0.
 		$post_type_supports_builder = ( function_exists( 'ttfmake_post_type_supports_builder' ) ) ? ttfmake_post_type_supports_builder( get_post_type() ) : false;
-
+		$dependencies[] = 'ttfmake-builder';
 		// Only load resources if they are needed on the current page
-		if (
+		if (true ||
 			in_array( $hook_suffix, array( 'post.php', 'post-new.php' ) )
 			&&
 			( $post_type_supports_builder || 'page' === get_post_type() )
@@ -581,7 +588,7 @@ final class MAKEPLUS_Component_WooCommerce_Setup extends MAKEPLUS_Util_Modules i
 				// Default
 				$choices = array( 'all' => __( 'All product categories/tags', 'make-plus' ) );
 				// Categories
-				$product_category_terms = get_terms( 'product_cat' );
+				$product_category_terms = get_terms( 'wpsc_product_category' );
 				if ( ! empty( $product_category_terms ) ) {
 					$category_slugs = array_map( array( $this, 'prefix_cat' ), wp_list_pluck( $product_category_terms, 'slug' ) );
 					$category_names = wp_list_pluck( $product_category_terms, 'name' );

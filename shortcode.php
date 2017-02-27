@@ -179,19 +179,30 @@ class MAKEPLUS_Component_WooCommerce_Shortcode extends MAKEPLUS_Util_Modules imp
 	 */
 	private function query_args_product_grid( $atts ) {
 		// Get the ordering arguments
-		$ordering_args = $this->wc()->query->get_catalog_ordering_args( esc_attr( $atts['sortby'] ) );
-
-		// Default arguments
+		$ordering_args = array();//$this->wc()->query->get_catalog_ordering_args( esc_attr( $atts['sortby'] ) );
 		$args = array(
-			'post_type'           => 'product',
+			'post_type'           => 'wpsc-product',
 			'post_status'         => 'publish',
 			'ignore_sticky_posts' => 1,
 			'no_found_rows'       => true,
-			'orderby'             => $ordering_args['orderby'],
-			'order'               => $ordering_args['order'],
+			// todo: port this
+			//'orderby'             => $ordering_args['orderby'],
+			//'order'               => $ordering_args['order'],
 			'posts_per_page'      => (int) $atts['count'],
-			'meta_query'          => $this->wc()->query->get_meta_query(),
+			//'meta_query'          => $this->wc()->query->get_meta_query(),
 		);
+//
+//		// Default arguments
+//		$args = array(
+//			'post_type'           => 'product',
+//			'post_status'         => 'publish',
+//			'ignore_sticky_posts' => 1,
+//			'no_found_rows'       => true,
+//			'orderby'             => $ordering_args['orderby'],
+//			'order'               => $ordering_args['order'],
+//			'posts_per_page'      => (int) $atts['count'],
+//			'meta_query'          => $this->wc()->query->get_meta_query(),
+//		);
 
 		// Extra default argument, depending on ordering args
 		if ( isset( $ordering_args['meta_key'] ) ) {
@@ -343,13 +354,14 @@ class MAKEPLUS_Component_WooCommerce_Shortcode extends MAKEPLUS_Util_Modules imp
 		$this->adjust_hooks( $add, $remove );
 
 		// Run the loop
-		woocommerce_product_loop_start();
+//		woocommerce_product_loop_start();
 
 		while ( $query->have_posts() ) : $query->the_post();
-			wc_get_template_part( 'content', 'product' );
+//			wc_get_template_part( 'content', 'product' );
+			include( 'sections/front-end-templates/product-grid.php' );
 		endwhile;
 
-		woocommerce_product_loop_end();
+//		woocommerce_product_loop_end();
 		wp_reset_postdata();
 
 		// Reset actions/filters

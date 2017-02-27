@@ -2,6 +2,10 @@
 /**
  * @package Make Plus
  */
+//include_once  'C:\var-www\sparkle_sites\bling-transfers.com\wp-content\themes\make\inc\builder\sections\section-definitions.php';
+//include_once 'C:\var-www\sparkle_sites\bling-transfers.com\wp-content\themes\make\inc\builder\core\api.php';
+//include_once 'C:\var-www\sparkle_sites\bling-transfers.com\wp-content\themes\make\inc\builder\core\save.php';
+//include_once 'C:\var-www\sparkle_sites\bling-transfers.com\wp-content\plugins\make-plus\inc\component\woocommerce\shortcode.php';
 
 global $ttfmake_section_data, $ttfmake_sections;
 
@@ -23,6 +27,9 @@ $defaults = array(
 );
 $data = wp_parse_args( $ttfmake_section_data, $defaults );
 
+function ttfmake_sanitize_image_id ( $s ) {
+	return $s;
+}
 // Sanitize all the data
 $title = apply_filters( 'the_title', $data['title'] );
 $background_image = ttfmake_sanitize_image_id( $data['background-image'] );

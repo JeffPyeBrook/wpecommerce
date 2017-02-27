@@ -45,7 +45,7 @@ final class MAKEPLUS_Component_WooCommerce_LegacyColor extends MAKEPLUS_Util_Mod
 		// Module defaults.
 		if ( function_exists( 'WC' ) ) {
 			$modules = wp_parse_args( $modules, array(
-				'wc' => WC(),
+//				'wc' => WC(),
 			) );
 		}
 
