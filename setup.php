@@ -24,7 +24,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 		'compatibility' => 'MAKEPLUS_Compatibility_MethodsInterface',
 		'builder'       => 'MAKE_Builder_SetupInterface',
 //		'legacy_color'  => 'MAKEPLUS_Component_WooCommerce_LegacyColorInterface',
-		'wc'            => 'WooCommerce',
+		'wpec'            => 'WPECommerce',
 //		'theme'         => 'MAKE_APIInterface',
 	);
 
@@ -35,7 +35,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	 *
 	 * @var string|null    The version of the WooCommerce plugin.
 	 */
-	private $wc_version = null;
+	private $wpec_version = null;
 
 	/**
 	 * WooCommerce Colors plugin indicator flag.
@@ -66,7 +66,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	public function __construct( MAKEPLUS_APIInterface $api = null, array $modules = array() ) {
 		// Detect WooCommerce plugin version
 		if ( defined( 'WPEC_VERSION' ) ) {
-			$this->wc_version = null;//WPEC_VERSION;
+			$this->wpec_version = WPEC_VERSION;//WPEC_VERSION;
 		}
 
 //		// Remove legacy color dependency if WC version is 2.3 or higher.
@@ -128,9 +128,9 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend' ), 20 );
 
 			// Handle color with the WC Color plugin
-			if ( true === $this->colors_plugin && version_compare( $this->wc_version, '2.3', '>=' ) ) {
-				add_action( 'customize_register', array( $this, 'wc_colors_customizer_mod' ), 30 );
-			}
+//			if ( true === $this->colors_plugin && version_compare( $this->wc_version, '2.3', '>=' ) ) {
+//				add_action( 'customize_register', array( $this, 'wc_colors_customizer_mod' ), 30 );
+//			}
 
 			// Define Shop view
 			add_filter( 'makeplus_view_is_shop', array( $this, 'is_shop' ) );
@@ -365,9 +365,9 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 		add_theme_support( 'makeplus-ecommerce-sidebar' );
 
 		// Highlight color
-		if ( version_compare( $this->wc_version, '2.3', '<' ) ) {
-			add_theme_support( 'makeplus-ecommerce-colorhighlight' );
-		}
+//		if ( version_compare( $this->wc_version, '2.3', '<' ) ) {
+//			add_theme_support( 'makeplus-ecommerce-colorhighlight' );
+//		}
 	}
 
 	/**
@@ -424,21 +424,21 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	 * @return bool
 	 */
 	public function admin_notice( MAKEPLUS_Admin_NoticeInterface $notice ) {
-		if ( version_compare( $this->wc_version, '2.3', '>=' ) && false === $this->colors_plugin ) {
-			return $notice->register_admin_notice(
-				'woocommerce-23-no-color-plugin',
-				sprintf(
-					__( 'Make\'s color scheme no longer applies to WooCommerce shop elements. Please install the <a href="%s">WooCommerce Colors</a> plugin to customize your shop\'s colors.', 'make-plus' ),
-					'https://wordpress.org/plugins/woocommerce-colors/'
-				),
-				array(
-					'cap'     => 'update_plugins',
-					'dismiss' => true,
-					'screen'  => array( 'dashboard', 'dashboard_page_wc-about', 'woocommerce_page_wc-settings', 'plugins.php' ),
-					'type'    => 'warning',
-				)
-			);
-		}
+//		if ( version_compare( $this->wc_version, '2.3', '>=' ) && false === $this->colors_plugin ) {
+//			return $notice->register_admin_notice(
+//				'woocommerce-23-no-color-plugin',
+//				sprintf(
+//					__( 'Make\'s color scheme no longer applies to WooCommerce shop elements. Please install the <a href="%s">WooCommerce Colors</a> plugin to customize your shop\'s colors.', 'make-plus' ),
+//					'https://wordpress.org/plugins/woocommerce-colors/'
+//				),
+//				array(
+//					'cap'     => 'update_plugins',
+//					'dismiss' => true,
+//					'screen'  => array( 'dashboard', 'dashboard_page_wc-about', 'woocommerce_page_wc-settings', 'plugins.php' ),
+//					'type'    => 'warning',
+//				)
+//			);
+//		}
 
 		return false;
 	}
@@ -457,9 +457,8 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	public function admin_enqueue( $hook_suffix ) {
 		// Have to be careful with this test because this function was introduced in Make 1.2.0.
 		$post_type_supports_builder = ( function_exists( 'ttfmake_post_type_supports_builder' ) ) ? ttfmake_post_type_supports_builder( get_post_type() ) : false;
-		$dependencies[] = 'ttfmake-builder';
 		// Only load resources if they are needed on the current page
-		if (true ||
+		if (
 			in_array( $hook_suffix, array( 'post.php', 'post-new.php' ) )
 			&&
 			( $post_type_supports_builder || 'page' === get_post_type() )
