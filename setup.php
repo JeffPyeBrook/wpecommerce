@@ -23,9 +23,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 		'mode'          => 'MAKEPLUS_Setup_ModeInterface',
 		'compatibility' => 'MAKEPLUS_Compatibility_MethodsInterface',
 		'builder'       => 'MAKE_Builder_SetupInterface',
-//		'legacy_color'  => 'MAKEPLUS_Component_WooCommerce_LegacyColorInterface',
-		'wpec'            => 'WPECommerce',
-//		'theme'         => 'MAKE_APIInterface',
+		'wpec'          => 'WPECommerce',
 	);
 
 	/**
@@ -79,11 +77,11 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 //		}
 
 		// Module defaults.
-		if ( function_exists( 'WC' ) ) {
-			$modules = wp_parse_args( $modules, array(
-				'wc' => WC(),
-			) );
-		}
+//		if ( function_exists( 'WC' ) ) {
+//			$modules = wp_parse_args( $modules, array(
+//				'wc' => WC(),
+//			) );
+//		}
 
 		// Load dependencies
 		parent::__construct( $api, $modules );

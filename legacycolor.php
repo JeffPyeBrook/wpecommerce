@@ -11,7 +11,7 @@
  * @since 1.5.0.
  * @since 1.7.0. Changed class name from TTFMP_WooCommerce_Legacy_Color.
  */
-final class MAKEPLUS_Component_WooCommerce_LegacyColor extends MAKEPLUS_Util_Modules implements MAKEPLUS_Component_WooCommerce_LegacyColorInterface, MAKEPLUS_Util_HookInterface {
+final class MAKEPLUS_Component_WPECommerce_LegacyColor extends MAKEPLUS_Util_Modules implements MAKEPLUS_Component_WPECommerce_LegacyColorInterface, MAKEPLUS_Util_HookInterface {
 	/**
 	 * An associative array of required modules.
 	 *
@@ -21,7 +21,7 @@ final class MAKEPLUS_Component_WooCommerce_LegacyColor extends MAKEPLUS_Util_Mod
 	 */
 	protected $dependencies = array(
 		'theme' => 'MAKE_APIInterface',
-		'wc'    => 'WooCommerce',
+		'wpec'          => 'WPECommerce',
 	);
 
 	/**
@@ -43,11 +43,11 @@ final class MAKEPLUS_Component_WooCommerce_LegacyColor extends MAKEPLUS_Util_Mod
 	 */
 	public function __construct( MAKEPLUS_APIInterface $api = null, array $modules = array() ) {
 		// Module defaults.
-		if ( function_exists( 'WC' ) ) {
-			$modules = wp_parse_args( $modules, array(
+//		if ( function_exists( 'WC' ) ) {
+//			$modules = wp_parse_args( $modules, array(
 //				'wc' => WC(),
-			) );
-		}
+//			) );
+//		}
 
 		// Load dependencies
 		parent::__construct( $api, $modules );
@@ -307,18 +307,18 @@ final class MAKEPLUS_Component_WooCommerce_LegacyColor extends MAKEPLUS_Util_Mod
 	 */
 	public function save_frontend_styles() {
 		// Load the LESS compile function
-		if ( class_exists( 'WC' ) && ! function_exists( 'woocommerce_compile_less_styles' ) ) {
-			// Include the file with the compile function
-			$file = $this->wc()->plugin_path() . '/includes/admin/wc-admin-functions.php';
-			if ( file_exists( $file ) ) {
-				include_once( $file );
-			}
-		}
-
-		// If the function was successfully loaded, run it
-		if ( function_exists( 'woocommerce_compile_less_styles' ) ) {
-			woocommerce_compile_less_styles();
-		}
+//		if ( class_exists( 'WC' ) && ! function_exists( 'woocommerce_compile_less_styles' ) ) {
+//			// Include the file with the compile function
+//			$file = $this->wc()->plugin_path() . '/includes/admin/wc-admin-functions.php';
+//			if ( file_exists( $file ) ) {
+//				include_once( $file );
+//			}
+//		}
+//
+//		// If the function was successfully loaded, run it
+//		if ( function_exists( 'woocommerce_compile_less_styles' ) ) {
+//			woocommerce_compile_less_styles();
+//		}
 	}
 
 	/**
