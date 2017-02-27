@@ -401,7 +401,7 @@ class MAKEPLUS_Component_WPECommerce_Shortcode extends MAKEPLUS_Util_Modules imp
 		 */
 		$image_size = apply_filters( 'makeplus_woocommerce_product_grid_image_size', 'large' );
 
-		echo woocommerce_get_product_thumbnail( $image_size );
+		echo get_the_post_thumbnail( null, $image_size );
 	}
 
 	/**
