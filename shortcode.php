@@ -11,7 +11,7 @@
  * @since 1.0.0.
  * @since 1.7.0. Changed class name from TTFMP_WooCommerce_Shortcode
  */
-class MAKEPLUS_Component_WooCommerce_Shortcode extends MAKEPLUS_Util_Modules implements MAKEPLUS_Component_WooCommerce_ShortcodeInterface {
+class MAKEPLUS_Component_WPECommerce_Shortcode extends MAKEPLUS_Util_Modules implements MAKEPLUS_Component_WPECommerce_ShortcodeInterface {
 	/**
 	 * An associative array of required modules.
 	 *
