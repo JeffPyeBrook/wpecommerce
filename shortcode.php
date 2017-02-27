@@ -21,7 +21,7 @@ class MAKEPLUS_Component_WPECommerce_Shortcode extends MAKEPLUS_Util_Modules imp
 	 */
 	protected $dependencies = array(
 		'compatibility' => 'MAKEPLUS_Compatibility_MethodsInterface',
-		'wpec'          => 'WPECommerce',
+		'wpec'          => 'wpecommerce',
 	);
 
 	/**

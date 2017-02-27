@@ -22,8 +22,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	protected $dependencies = array(
 		'mode'          => 'MAKEPLUS_Setup_ModeInterface',
 		'compatibility' => 'MAKEPLUS_Compatibility_MethodsInterface',
-		'wpec'          => 'WPECommerce',
-		'commerce'      => 'WPECommerce',
+		'wpec'          => 'wpecommerce',
 	);
 
 	/**
@@ -63,8 +62,8 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	 */
 	public function __construct( MAKEPLUS_APIInterface $api = null, array $modules = array() ) {
 		// Detect WooCommerce plugin version
-		if ( defined( 'WPEC_VERSION' ) ) {
-			$this->wpec_version = WPEC_VERSION;//WPEC_VERSION;
+		if ( defined( 'WPSC_VERSION' ) ) {
+			$this->wpec_version = WPSC_VERSION;//WPEC_VERSION;
 		}
 
 //		// Remove legacy color dependency if WC version is 2.3 or higher.
