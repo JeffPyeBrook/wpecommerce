@@ -23,6 +23,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 		'mode'          => 'MAKEPLUS_Setup_ModeInterface',
 		'compatibility' => 'MAKEPLUS_Compatibility_MethodsInterface',
 		'wpec'          => 'WPECommerce',
+		'commerce'      => 'WPECommerce',
 	);
 
 	/**
