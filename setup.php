@@ -106,6 +106,11 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 			return;
 		}
 
+		add_filter( 'make_section_defaults', array( $this, 'section_defaults' ) );
+
+		// Register section choices
+		add_filter( 'make_section_choices', array( $this, 'section_choices' ), 10, 3 );
+
 		// Passive mode. Only enable the shortcode.
 		if ( 'active' !== $this->mode()->get_mode() ) {
 			// Shortcode
@@ -306,9 +311,9 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 		$parent_post_type = ( $post instanceof WP_Post ) ? get_post_type( $post->post_parent ) : '';
 
 		if (
-//			is_product()
-//			||
-			( is_attachment() && 'wpsc_product' === $parent_post_type )
+				( get_post_type( $post ) == 'wpsc-product' )
+				||
+				( is_attachment() && 'wpsc-product' === $parent_post_type )
 		) {
 			$is_product = true;
 		}
@@ -330,7 +335,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	public function admin_is_product( $is_product ) {
 		global $typenow;
 
-		if ( isset( $typenow ) && 'product' === $typenow ) {
+		if ( isset( $typenow ) && 'wpsc-product' === $typenow ) {
 			$is_product = true;
 		}
 
