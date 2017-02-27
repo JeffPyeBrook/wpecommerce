@@ -22,7 +22,6 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	protected $dependencies = array(
 		'mode'          => 'MAKEPLUS_Setup_ModeInterface',
 		'compatibility' => 'MAKEPLUS_Compatibility_MethodsInterface',
-		'builder'       => 'MAKE_Builder_SetupInterface',
 		'wpec'          => 'WPECommerce',
 	);
 
@@ -106,11 +105,6 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 		if ( $this->is_hooked() ) {
 			return;
 		}
-
-		add_filter( 'make_section_defaults', array( $this, 'section_defaults' ) );
-
-		// Register section choices
-		add_filter( 'make_section_choices', array( $this, 'section_choices' ), 10, 3 );
 
 		// Passive mode. Only enable the shortcode.
 		if ( 'active' !== $this->mode()->get_mode() ) {
