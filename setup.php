@@ -658,12 +658,12 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 			'productgrid',
 			__( 'Products', 'make-plus' ),
 			makeplus_get_plugin_directory_uri() . 'css/woocommerce/images/woocommerce.png',
-			__( 'Display your WooCommerce products in a grid layout.', 'make-plus' ),
+			__( 'Display your WPECommerce products in a grid layout.', 'make-plus' ),
 			array( $this, 'save_product_grid' ),
 			'sections/builder-templates/product-grid',
 			'sections/front-end-templates/product-grid',
 			820,
-			makeplus_get_plugin_directory() . 'inc/component/woocommerce',
+			makeplus_get_plugin_directory() . 'inc/component/wpecommerce',
 			array(
 				100 => array(
 					'type'  => 'section_title',
