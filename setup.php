@@ -22,7 +22,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	protected $dependencies = array(
 		'mode'          => 'MAKEPLUS_Setup_ModeInterface',
 		'compatibility' => 'MAKEPLUS_Compatibility_MethodsInterface',
-		'wpec'          => 'wpecommerce',
+		'wpec'          => 'WP_eCommerce',
 	);
 
 	/**
