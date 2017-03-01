@@ -170,7 +170,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 			if ( ! empty( $sections ) ) {
 				// Parse the sections included on the page.
 				$section_types = wp_list_pluck( $sections, 'section-type' );
-				$matched_sections = array_keys( $section_types, 'wpecproductgrid' );
+				$matched_sections = array_keys( $section_types, 'productgrid' );
 
 				// Only enqueue if there is at least one Products section.
 				if ( ! empty( $matched_sections ) ) {
@@ -421,7 +421,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	 * @return array             The augmented section defaults.
 	 */
 	public function section_defaults( $defaults ) {
-		$defaults['wpecproductgrid'] = $this->get_defaults();
+		$defaults['productgrid'] = $this->get_defaults();
 
 		return $defaults;
 	}
@@ -556,7 +556,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 		}
 
 		ttfmake_add_section(
-			'wpecproductgrid',
+			'productgrid',
 			__( 'Products', 'make-plus' ),
 			makeplus_get_plugin_directory_uri() . 'css/wpecommerce/images/wpecommerce.png',
 			__( 'Display your WPECommerce products in a grid layout.', 'make-plus' ),
@@ -621,7 +621,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	 * @return array             The modified array to be jsonified.
 	 */
 	public function get_section_json( $data ) {
-		if ( $data['section-type'] == 'wpecproductgrid' ) {
+		if ( $data['section-type'] == 'productgrid' ) {
 			$data = wp_parse_args( $data, $this->get_defaults() );
 			$image = ttfmake_get_image_src( $data['background-image'], 'large' );
 

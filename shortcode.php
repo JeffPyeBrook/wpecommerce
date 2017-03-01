@@ -18,7 +18,7 @@ class MAKEPLUS_Component_WPECommerce_Shortcode extends MAKEPLUS_Util_Modules imp
 	 * @var array
 	 */
 	protected $dependencies = array(
-		'wpec'          => 'WP_eCommerce',
+//		'wpec'          => 'WP_eCommerce',
 	);
 
 	/**
@@ -332,7 +332,7 @@ class MAKEPLUS_Component_WPECommerce_Shortcode extends MAKEPLUS_Util_Modules imp
 
 		while ( $query->have_posts() ) : $query->the_post();
 //			wc_get_template_part( 'content', 'product' );
-			include( 'sections/front-end-templates/product-grid.php' );
+			load_template( 'sections/front-end-templates/product-grid.php' );
 		endwhile;
 
 		wp_reset_postdata();
