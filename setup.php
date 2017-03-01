@@ -21,10 +21,8 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	 */
 	protected $dependencies = array(
 		'mode'          => 'MAKEPLUS_Setup_ModeInterface',
-		'builder' => 'MAKE_Builder_Setup',
-//		'compatibility' => 'MAKEPLUS_Compatibility_MethodsInterface',
-//		'wpec'          => 'WP_eCommerce',
-		'theme' => 'MAKE_APIInterface',
+		'compatibility' => 'MAKEPLUS_Compatibility_MethodsInterface',
+		'wpec'          => 'WP_eCommerce',
 	);
 
 	/**
@@ -68,27 +66,8 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 			$this->wpec_version = WPSC_VERSION;//WPEC_VERSION;
 		}
 
-//		// Remove legacy color dependency if WC version is 2.3 or higher.
-//		if ( is_null( $this->wc_version ) || version_compare( $this->wc_version, '2.3', '>=' ) ) {
-//			unset( $this->dependencies['legacy_color'] );
-//		} else {
-//			$modules = wp_parse_args( $modules, array(
-//				'legacy_color' => 'MAKEPLUS_Component_WooCommerce_LegacyColor',
-//			) );
-//		}
-
-		// Module defaults.
-//		if ( function_exists( 'WC' ) ) {
-//			$modules = wp_parse_args( $modules, array(
-//				'wc' => WC(),
-//			) );
-//		}
-
 		// Load dependencies
 		parent::__construct( $api, $modules );
-
-//		// Detect WooCommerce Colors plugin
-//		$this->colors_plugin = $this->mode()->is_plugin_active( 'woocommerce-colors/woocommerce-colors.php' );
 
 		// Add the Make API if it's available
 		if ( $this->mode()->has_make_api() ) {

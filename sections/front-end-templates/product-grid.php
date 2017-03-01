@@ -2,12 +2,58 @@
 /**
  * @package Make Plus
  */
-//include_once  'C:\var-www\sparkle_sites\bling-transfers.com\wp-content\themes\make\inc\builder\sections\section-definitions.php';
-//include_once 'C:\var-www\sparkle_sites\bling-transfers.com\wp-content\themes\make\inc\builder\core\api.php';
-//include_once 'C:\var-www\sparkle_sites\bling-transfers.com\wp-content\themes\make\inc\builder\core\save.php';
-//include_once 'C:\var-www\sparkle_sites\bling-transfers.com\wp-content\plugins\make-plus\inc\component\woocommerce\shortcode.php';
 
 global $ttfmake_section_data, $ttfmake_sections;
+
+if ( ! function_exists( 'ttfmake_get_section_default' ) ) {
+    function ttfmake_get_section_default( $a, $b ) {
+        return 1;
+    }
+
+    function ttfmake_sanitize_image_id( $id ) {
+        return $id;
+    }
+
+	function ttfmake_sanitize_section_choice( $a, $b, $c ) {
+        return $a;
+    }
+}
+
+if ( ! function_exists( 'ttfmake_get_image_src') ) {
+	function ttfmake_get_image_src( $image_id, $size ) {
+		$src = '';
+
+		if ( false === strpos( $image_id, 'x' ) ) {
+			$image = wp_get_attachment_image_src( $image_id, $size );
+
+			if ( false !== $image && isset( $image[0] ) ) {
+				$src = $image;
+			}
+		} else {
+			$image = ttfmake_get_placeholder_image( $image_id );
+
+			if ( isset( $image['src'] ) ) {
+				$wp_src = array(
+					0 => $image['src'],
+					1 => $image['width'],
+					2 => $image['height'],
+				);
+				$src    = array_merge( $image, $wp_src );
+			}
+		}
+
+		/**
+		 * Filter the image source attributes.
+		 *
+		 * @since 1.2.3.
+		 *
+		 * @param string $src      The image source attributes.
+		 * @param int    $image_id The ID for the image.
+		 * @param bool   $size     The requested image size.
+		 */
+		return apply_filters( 'make_get_image_src', $src, $image_id, $size );
+	}
+}
 
 $defaults = array(
 	'title' => ttfmake_get_section_default( 'title', 'woocommerce-product-grid' ),
@@ -25,6 +71,8 @@ $defaults = array(
 	'price' => ttfmake_get_section_default( 'price', 'woocommerce-product-grid' ),
 	'addcart' => ttfmake_get_section_default( 'addcart', 'woocommerce-product-grid' ),
 );
+
+
 $data = wp_parse_args( $ttfmake_section_data, $defaults );
 
 // Sanitize all the data
@@ -51,7 +99,7 @@ endif;
 
 // Classes
 $classes = 'builder-section ';
-$classes .= ttfmake_get_builder_save()->section_classes( $ttfmake_section_data, $ttfmake_sections );
+//$classes .= ttfmake_get_builder_save()->section_classes( $ttfmake_section_data, $ttfmake_sections );
 if ( ! empty( $background_color ) || 0 !== $background_image ) {
 	$classes .= ' has-background';
 }
