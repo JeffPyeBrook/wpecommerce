@@ -18,9 +18,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	 * @var array
 	 */
 	protected $dependencies = array(
-		'mode'          => 'MAKEPLUS_Setup_ModeInterface',
-		'compatibility' => 'MAKEPLUS_Compatibility_MethodsInterface',
-		'wpec'          => 'WP_eCommerce',
+		'theme' => 'MAKE_APIInterface',
 	);
 
 	/**
@@ -41,28 +39,28 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	 */
 	private static $hooked = false;
 
-	/**
-	 * MAKEPLUS_Component_WPECommerce_Setup constructor.
-	 *
-	 * @since 1.7.0.
-	 *
-	 * @param MAKEPLUS_APIInterface|null $api
-	 * @param array                      $modules
-	 */
-	public function __construct( MAKEPLUS_APIInterface $api = null, array $modules = array() ) {
-		// Detect WPECommerce plugin version
-		if ( defined( 'WPSC_VERSION' ) ) {
-			$this->wpec_version = WPSC_VERSION;
-		}
-
-		// Load dependencies
-		parent::__construct( $api, $modules );
-
-		// Add the Make API if it's available
-		if ( $this->mode()->has_make_api() ) {
-			$this->add_module( 'theme', Make() );
-		}
-	}
+//	/**
+	//	 * MAKEPLUS_Component_WPECommerce_Setup constructor.
+	//	 *
+	//	 * @since 1.7.0.
+	//	 *
+	//	 * @param MAKEPLUS_APIInterface|null $api
+	//	 * @param array                      $modules
+	//	 */
+	//	public function __construct( MAKEPLUS_APIInterface $api = null, array $modules = array() ) {
+	//		// Detect WPECommerce plugin version
+	//		if ( defined( 'WPSC_VERSION' ) ) {
+	//			$this->wpec_version = WPSC_VERSION;
+	//		}
+	//
+	//		// Load dependencies
+	//		parent::__construct( $api, $modules );
+	//
+	//		// Add the Make API if it's available
+	//		if ( $this->mode()->has_make_api() ) {
+	//			$this->add_module( 'theme', Make() );
+	//		}
+	//	}
 
 	/**
 	 * Hook into WordPress.
@@ -81,13 +79,14 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 		// Register section choices
 		add_filter( 'make_section_choices', array( $this, 'section_choices' ), 10, 3 );
 
-		// Passive mode. Only enable the shortcode.
-		if ( 'active' !== $this->mode()->get_mode() ) {
-			// Shortcode
-			add_shortcode( 'ttfmp_wpecommerce_product_grid', array( $this, 'handle_shortcode' ) );
-		}
-		// Full functionality.
-		else {
+//		// Passive mode. Only enable the shortcode.
+//		if ( 'active' !== $this->mode()->get_mode() ) {
+//			// Shortcode
+//			add_shortcode( 'ttfmp_wpecommerce_product_grid', array( $this, 'handle_shortcode' ) );
+//		}
+//		// Full functionality.
+//		else
+			{
 			// Shortcode
 			add_shortcode( 'ttfmp_wpecommerce_product_grid', array( $this, 'handle_shortcode' ) );
 
@@ -171,7 +170,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 			if ( ! empty( $sections ) ) {
 				// Parse the sections included on the page.
 				$section_types = wp_list_pluck( $sections, 'section-type' );
-				$matched_sections = array_keys( $section_types, 'productgrid' );
+				$matched_sections = array_keys( $section_types, 'wpecproductgrid' );
 
 				// Only enqueue if there is at least one Products section.
 				if ( ! empty( $matched_sections ) ) {
@@ -205,13 +204,12 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	 * @return bool
 	 */
 	public function is_shop( $is_shop ) {
-		return false;
 		if (
-			is_shop()
+			is_post_type_archive( 'wpsc-product' )
 			||
-			is_product_category()
+			is_tax( 'product_category' )
 			||
-			is_product_tag()
+			is_tax( 'product_tag' )
 		) {
 			$is_shop = true;
 		}
@@ -284,11 +282,6 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 
 		// Shop Sidebar
 		add_theme_support( 'makeplus-ecommerce-sidebar' );
-
-		// Highlight color
-//		if ( version_compare( $this->wc_version, '2.3', '<' ) ) {
-//			add_theme_support( 'makeplus-ecommerce-colorhighlight' );
-//		}
 	}
 
 	/**
@@ -428,7 +421,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	 * @return array             The augmented section defaults.
 	 */
 	public function section_defaults( $defaults ) {
-		$defaults['productgrid'] = $this->get_defaults();
+		$defaults['wpecproductgrid'] = $this->get_defaults();
 
 		return $defaults;
 	}
@@ -563,7 +556,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 		}
 
 		ttfmake_add_section(
-			'productgrid',
+			'wpecproductgrid',
 			__( 'Products', 'make-plus' ),
 			makeplus_get_plugin_directory_uri() . 'css/wpecommerce/images/wpecommerce.png',
 			__( 'Display your WPECommerce products in a grid layout.', 'make-plus' ),
@@ -628,7 +621,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	 * @return array             The modified array to be jsonified.
 	 */
 	public function get_section_json( $data ) {
-		if ( $data['section-type'] == 'productgrid' ) {
+		if ( $data['section-type'] == 'wpecproductgrid' ) {
 			$data = wp_parse_args( $data, $this->get_defaults() );
 			$image = ttfmake_get_image_src( $data['background-image'], 'large' );
 

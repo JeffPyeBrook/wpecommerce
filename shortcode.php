@@ -18,7 +18,6 @@ class MAKEPLUS_Component_WPECommerce_Shortcode extends MAKEPLUS_Util_Modules imp
 	 * @var array
 	 */
 	protected $dependencies = array(
-		'compatibility' => 'MAKEPLUS_Compatibility_MethodsInterface',
 		'wpec'          => 'WP_eCommerce',
 	);
 
