@@ -21,8 +21,10 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	 */
 	protected $dependencies = array(
 		'mode'          => 'MAKEPLUS_Setup_ModeInterface',
-		'compatibility' => 'MAKEPLUS_Compatibility_MethodsInterface',
-		'wpec'          => 'WP_eCommerce',
+		'builder' => 'MAKE_Builder_Setup',
+//		'compatibility' => 'MAKEPLUS_Compatibility_MethodsInterface',
+//		'wpec'          => 'WP_eCommerce',
+		'theme' => 'MAKE_APIInterface',
 	);
 
 	/**
@@ -114,12 +116,12 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 		// Passive mode. Only enable the shortcode.
 		if ( 'active' !== $this->mode()->get_mode() ) {
 			// Shortcode
-			add_shortcode( 'ttfmp_woocomerce_product_grid', array( $this, 'handle_shortcode' ) );
+			add_shortcode( 'ttfmp_wpecommerce_product_grid', array( $this, 'handle_shortcode' ) );
 		}
 		// Full functionality.
 		else {
 			// Shortcode
-			add_shortcode( 'ttfmp_woocomerce_product_grid', array( $this, 'handle_shortcode' ) );
+			add_shortcode( 'ttfmp_wpecommerce_product_grid', array( $this, 'handle_shortcode' ) );
 
 			// Enqueue frontend
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend' ), 20 );

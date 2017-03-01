@@ -21,7 +21,7 @@ final class MAKEPLUS_Component_WPECommerce_LegacyColor extends MAKEPLUS_Util_Mod
 	 */
 	protected $dependencies = array(
 		'theme' => 'MAKE_APIInterface',
-		'wpec'  => 'wpecommerce',
+		'wpec'  => 'WP_eCommerce',
 	);
 
 	/**

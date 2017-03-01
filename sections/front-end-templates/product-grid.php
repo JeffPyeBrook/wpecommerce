@@ -27,9 +27,6 @@ $defaults = array(
 );
 $data = wp_parse_args( $ttfmake_section_data, $defaults );
 
-function ttfmake_sanitize_image_id ( $s ) {
-	return $s;
-}
 // Sanitize all the data
 $title = apply_filters( 'the_title', $data['title'] );
 $background_image = ttfmake_sanitize_image_id( $data['background-image'] );
@@ -86,7 +83,7 @@ if ( 'cover' === $background_style  ) {
 	</h3>
 	<?php endif; ?>
 	<div class="builder-section-content">
-		[ttfmp_woocomerce_product_grid columns="<?php echo $columns; ?>" type="<?php echo $type; ?>" taxonomy="<?php echo $taxonomy; ?>" sortby="<?php echo $sortby; ?>" count="<?php echo $count; ?>" thumb="<?php echo $thumb; ?>" rating="<?php echo $rating; ?>" price="<?php echo $price; ?>" addcart="<?php echo $addcart; ?>"]
+		[ttfmp_wpecommerce_product_grid columns="<?php echo $columns; ?>" type="<?php echo $type; ?>" taxonomy="<?php echo $taxonomy; ?>" sortby="<?php echo $sortby; ?>" count="<?php echo $count; ?>" thumb="<?php echo $thumb; ?>" rating="<?php echo $rating; ?>" price="<?php echo $price; ?>" addcart="<?php echo $addcart; ?>"]
 	</div>
 	<?php if ( 0 !== $darken ) : ?>
 	<div class="builder-section-overlay"></div>

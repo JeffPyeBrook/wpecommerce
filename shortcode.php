@@ -20,8 +20,8 @@ class MAKEPLUS_Component_WPECommerce_Shortcode extends MAKEPLUS_Util_Modules imp
 	 * @var array
 	 */
 	protected $dependencies = array(
-		'compatibility' => 'MAKEPLUS_Compatibility_MethodsInterface',
-		'wpec'          => 'WP_eCommerce',
+//		'compatibility' => 'MAKEPLUS_Compatibility_MethodsInterface',
+//		'wpec'          => 'WP_eCommerce',
 	);
 
 	/**
@@ -160,7 +160,7 @@ class MAKEPLUS_Component_WPECommerce_Shortcode extends MAKEPLUS_Util_Modules imp
 			'price'  => 1,
 			'addcart'  => 1,
 		);
-		$parsed_atts = shortcode_atts( $defaults, $atts, 'ttfmp_woocomerce_product_grid' );
+		$parsed_atts = shortcode_atts( $defaults, $atts, 'ttfmp_wpecommerce_product_grid' );
 
 		// Store the columns number for later
 		$this->columns = ( 0 === absint( $parsed_atts['columns'] ) ) ? $defaults['columns'] : absint( $parsed_atts['columns'] );
@@ -238,29 +238,6 @@ class MAKEPLUS_Component_WPECommerce_Shortcode extends MAKEPLUS_Util_Modules imp
 					)
 				);
 			}
-		}
-
-		// Check for deprecated filter.
-		if ( has_filter( 'ttfmp_woocommerce_product_grid_query_args' ) ) {
-			$this->compatibility()->deprecated_hook(
-				'ttfmp_woocommerce_product_grid_query_args',
-				'1.7.0',
-				sprintf(
-					__( 'Use the %s hook instead.', 'make-plus' ),
-					'<code>makeplus_woocommerce_product_grid_query_args</code>'
-				)
-			);
-
-			/**
-			 * Filter the query arguments for the Product Grid.
-			 *
-			 * @since 1.0.0.
-			 * @deprecated 1.7.0.
-			 *
-			 * @param array $args    Query args
-			 * @param array $atts    Shortcode attributes
-			 */
-			$args = apply_filters( 'ttfmp_woocommerce_product_grid_query_args', $args, $atts );
 		}
 
 		/**
@@ -430,28 +407,6 @@ class MAKEPLUS_Component_WPECommerce_Shortcode extends MAKEPLUS_Util_Modules imp
 		$output = '';
 		if ( $query->have_posts() ) {
 			$output = $this->render_product_grid( $query, $atts );
-		}
-
-		// Check for deprecated filter.
-		if ( has_filter( 'ttfmp_woocommerce_product_grid_output' ) ) {
-			$this->compatibility()->deprecated_hook(
-				'ttfmp_woocommerce_product_grid_output',
-				'1.7.0',
-				sprintf(
-					__( 'Use the %s hook instead.', 'make-plus' ),
-					'<code>makeplus_woocommerce_product_grid_output</code>'
-				)
-			);
-
-			/**
-			 * Filter the output for the Product Grid.
-			 *
-			 * @since 1.0.0.
-			 * @deprecated 1.7.0.
-			 *
-			 * @param string $output
-			 */
-			$output = apply_filters( 'ttfmp_woocommerce_product_grid_output', $output );
 		}
 
 		/**
