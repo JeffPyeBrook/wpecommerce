@@ -4,12 +4,10 @@
  */
 
 /**
- * Class MAKEPLUS_Component_WooCommerce_Setup
+ * Class MAKEPLUS_Component_WPECommerce_Setup
  *
- * Integrate the WooCommerce plugin into Make's theme settings and Builder.
+ * Integrate the WPECommerce plugin into Make's theme settings and Builder.
  *
- * @since 1.0.0.
- * @since 1.7.0. Changed class name from TTFMP_WooCommerce.
  */
 final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules implements MAKEPLUS_Util_HookInterface {
 	/**
@@ -26,22 +24,13 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	);
 
 	/**
-	 * The version of the WooCommerce plugin.
+	 * The version of the WPECommerce plugin.
 	 *
 	 * @since 1.5.0.
 	 *
-	 * @var string|null    The version of the WooCommerce plugin.
+	 * @var string|null    The version of the WPECommerce plugin.
 	 */
 	private $wpec_version = null;
-
-	/**
-	 * WooCommerce Colors plugin indicator flag.
-	 *
-	 * @since 1.5.0.
-	 *
-	 * @var bool    True if WooCommerce Colors plugin is active.
-	 */
-	private $colors_plugin = false;
 
 	/**
 	 * Indicator of whether the hook routine has been run.
@@ -53,7 +42,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	private static $hooked = false;
 
 	/**
-	 * MAKEPLUS_Component_WooCommerce_Setup constructor.
+	 * MAKEPLUS_Component_WPECommerce_Setup constructor.
 	 *
 	 * @since 1.7.0.
 	 *
@@ -61,9 +50,9 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	 * @param array                      $modules
 	 */
 	public function __construct( MAKEPLUS_APIInterface $api = null, array $modules = array() ) {
-		// Detect WooCommerce plugin version
+		// Detect WPECommerce plugin version
 		if ( defined( 'WPSC_VERSION' ) ) {
-			$this->wpec_version = WPSC_VERSION;//WPEC_VERSION;
+			$this->wpec_version = WPSC_VERSION;
 		}
 
 		// Load dependencies
@@ -104,11 +93,6 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 
 			// Enqueue frontend
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend' ), 20 );
-
-			// Handle color with the WC Color plugin
-//			if ( true === $this->colors_plugin && version_compare( $this->wc_version, '2.3', '>=' ) ) {
-//				add_action( 'customize_register', array( $this, 'wc_colors_customizer_mod' ), 30 );
-//			}
 
 			// Define Shop view
 			add_filter( 'makeplus_view_is_shop', array( $this, 'is_shop' ) );
@@ -192,61 +176,20 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 				// Only enqueue if there is at least one Products section.
 				if ( ! empty( $matched_sections ) ) {
 					// Styles
-//					if ( version_compare( $this->wc_version, '2.3', '>=' ) ) {
-//						wp_enqueue_style(
-//							'makeplus-woocommerce-frontend',
-//							makeplus_get_plugin_directory_uri() . 'css/woocommerce/frontend.css',
-//							array(),
-//							MAKEPLUS_VERSION
-//						);
+						wp_enqueue_style(
+							'makeplus-wpecommerce-frontend',
+							makeplus_get_plugin_directory_uri() . 'css/wpecommerce/frontend.css',
+							array(),
+							MAKEPLUS_VERSION
+						);
 
 						// If current theme is a child theme of Make, load the stylesheet
 						// before the child theme stylesheet so styles can be customized.
 						if ( $this->has_module( 'theme' ) && is_child_theme() ) {
-							$this->theme()->scripts()->add_dependency( 'make-main', 'makeplus-woocommerce-frontend', 'style' );
-						}
-//					}
+							$this->theme()->scripts()->add_dependency( 'make-main', 'makeplus-wpecommerce-frontend', 'style' );
+					}
 				}
 			}
-		}
-
-		// Legacy styles
-//		if ( version_compare( $this->wc_version, '2.3', '<' ) ) {
-//			wp_enqueue_style(
-//				'makeplus-woocommerce-legacy',
-//				makeplus_get_plugin_directory_uri() . 'css/woocommerce/legacy/woocommerce.css',
-//				array( 'woocommerce-general', 'woocommerce-smallscreen', 'woocommerce-layout' ),
-//				MAKEPLUS_VERSION
-//			);
-//
-//			// If current theme is a child theme of Make, load the stylesheet
-//			// before the child theme stylesheet so styles can be customized.
-//			if ( $this->has_module( 'theme' ) && is_child_theme() ) {
-//				$this->theme()->scripts()->add_dependency( 'make-main', 'makeplus-woocommerce-legacy', 'style' );
-//			}
-//		}
-	}
-
-	/**
-	 * Modify the WooCommerce color section added by the WooCommerce Colors plugin.
-	 *
-	 * @since 1.5.0.
-	 *
-	 * @param WP_Customize_Manager $wp_customize
-	 *
-	 * @return void
-	 */
-	public function wc_colors_customizer_mod( WP_Customize_Manager $wp_customize ) {
-		$panel_id = 'make_color';
-		$section = $wp_customize->get_section( 'woocommerce_colors' );
-
-		// Move the WooCommerce section to the Colors panel
-		if ( $wp_customize->get_panel( $panel_id ) && $section ) {
-			$panel_sections = $this->theme()->customizer_controls()->get_panel_sections( $wp_customize, $panel_id );
-			$last_priority = (int) $this->theme()->customizer_controls()->get_last_priority( $panel_sections );
-
-			$section->panel = $panel_id;
-			$section->priority = $last_priority + 5;
 		}
 	}
 
@@ -360,7 +303,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	 * @return string
 	 */
 	public function layoutshop_description( $text ) {
-		$description = esc_html__( 'For WooCommerce, this view consists of product archives and related category and tag archives.', 'make-plus' );
+		$description = esc_html__( 'For WPECommerce, this view consists of product archives and related category and tag archives.', 'make-plus' );
 
 		if ( '' !== $text ) {
 			$text .= '<br />';
@@ -381,7 +324,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	 * @return string
 	 */
 	public function layoutproduct_description( $text ) {
-		$description = esc_html__( 'For WooCommerce, this view consists of single products.', 'make-plus' );
+		$description = esc_html__( 'For WPECommerce, this view consists of single products.', 'make-plus' );
 
 		if ( '' !== $text ) {
 			$text .= '<br />';
@@ -402,22 +345,6 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	 * @return bool
 	 */
 	public function admin_notice( MAKEPLUS_Admin_NoticeInterface $notice ) {
-//		if ( version_compare( $this->wc_version, '2.3', '>=' ) && false === $this->colors_plugin ) {
-//			return $notice->register_admin_notice(
-//				'woocommerce-23-no-color-plugin',
-//				sprintf(
-//					__( 'Make\'s color scheme no longer applies to WooCommerce shop elements. Please install the <a href="%s">WooCommerce Colors</a> plugin to customize your shop\'s colors.', 'make-plus' ),
-//					'https://wordpress.org/plugins/woocommerce-colors/'
-//				),
-//				array(
-//					'cap'     => 'update_plugins',
-//					'dismiss' => true,
-//					'screen'  => array( 'dashboard', 'dashboard_page_wc-about', 'woocommerce_page_wc-settings', 'plugins.php' ),
-//					'type'    => 'warning',
-//				)
-//			);
-//		}
-
 		return false;
 	}
 
@@ -445,15 +372,15 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 
 			// Add the section CSS
 			wp_enqueue_style(
-				'makeplus-woocommerce-sections',
-				makeplus_get_plugin_directory_uri() . 'css/woocommerce/sections.css',
+				'makeplus-wpecommerce-sections',
+				makeplus_get_plugin_directory_uri() . 'css/wpecommerce/sections.css',
 				array(),
 				MAKEPLUS_VERSION
 			);
 
 			wp_enqueue_script(
 				'makeplus-productgrid-model',
-				makeplus_get_plugin_directory_uri() . 'js/woocommerce/builder-model.js',
+				makeplus_get_plugin_directory_uri() . 'js/wpecommerce/builder-model.js',
 				$dependencies,
 				MAKEPLUS_VERSION,
 				true
@@ -461,7 +388,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 
 			wp_enqueue_script(
 				'makeplus-productgrid-view',
-				makeplus_get_plugin_directory_uri() . 'js/woocommerce/builder-view.js',
+				makeplus_get_plugin_directory_uri() . 'js/wpecommerce/builder-view.js',
 				$dependencies,
 				MAKEPLUS_VERSION,
 				true
@@ -520,20 +447,20 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	 * @return array                  The choices for the particular section_type / key combo.
 	 */
 	public function section_choices( $choices, $key, $section_type ) {
-		if ( count( $choices ) > 1 || ! in_array( $section_type, array( 'woocommerce-product-grid' ) ) ) {
+		if ( count( $choices ) > 1 || ! in_array( $section_type, array( 'wpecommerce-product-grid' ) ) ) {
 			return $choices;
 		}
 
 		$choice_id = "$section_type-$key";
 
 		switch ( $choice_id ) {
-			case 'woocommerce-product-grid-background-style' :
+			case 'wpecommerce-product-grid-background-style' :
 				$choices = array(
 					'tile'  => __( 'Tile', 'make-plus' ),
 					'cover' => __( 'Cover', 'make-plus' ),
 				);
 				break;
-			case 'woocommerce-product-grid-columns' :
+			case 'wpecommerce-product-grid-columns' :
 				$choices = array(
 					1 => __( '1', 'make-plus' ),
 					2 => __( '2', 'make-plus' ),
@@ -541,14 +468,14 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 					4 => __( '4', 'make-plus' ),
 				);
 				break;
-			case 'woocommerce-product-grid-type' :
+			case 'wpecommerce-product-grid-type' :
 				$choices = array(
 					'all' => __( 'All products', 'make-plus' ),
 					'featured' => __( 'Featured products', 'make-plus' ),
 					'sale' => __( 'Sale products', 'make-plus' ),
 				);
 				break;
-			case 'woocommerce-product-grid-sortby' :
+			case 'wpecommerce-product-grid-sortby' :
 				$choices = array(
 					'menu_order' => __( 'Default sorting', 'make-plus' ),
 					'popularity' => __( 'Popularity', 'make-plus' ),
@@ -557,11 +484,11 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 					'price'      => __( 'Price: low to high', 'make-plus' ),
 					'price-desc' => __( 'Price: high to low', 'make-plus' )
 				);
-				if ( get_option( 'woocommerce_enable_review_rating' ) === 'no' ) {
+				if ( get_option( 'wpecommerce_enable_review_rating' ) === 'no' ) {
 					unset( $choices['rating'] );
 				}
 				break;
-			case 'woocommerce-product-grid-taxonomy' :
+			case 'wpecommerce-product-grid-taxonomy' :
 				// Default
 				$choices = array( 'all' => __( 'All product categories/tags', 'make-plus' ) );
 				// Categories
@@ -638,7 +565,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 		ttfmake_add_section(
 			'productgrid',
 			__( 'Products', 'make-plus' ),
-			makeplus_get_plugin_directory_uri() . 'css/woocommerce/images/woocommerce.png',
+			makeplus_get_plugin_directory_uri() . 'css/wpecommerce/images/wpecommerce.png',
 			__( 'Display your WPECommerce products in a grid layout.', 'make-plus' ),
 			array( $this, 'save_product_grid' ),
 			'sections/builder-templates/product-grid',
@@ -656,34 +583,34 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 					'type'    => 'checkbox',
 					'label'   => __( 'Full width', 'make-plus' ),
 					'name'    => 'full-width',
-					'default' => ttfmake_get_section_default( 'full-width', 'woocommerce-product-grid' ),
+					'default' => ttfmake_get_section_default( 'full-width', 'wpecommerce-product-grid' ),
 				),
 				300 => array(
 					'type'  => 'image',
 					'name'  => 'background-image',
 					'label' => __( 'Background image', 'make-plus' ),
 					'class' => 'ttfmake-configuration-media',
-					'default' => ttfmake_get_section_default( 'background-image', 'woocommerce-product-grid' ),
+					'default' => ttfmake_get_section_default( 'background-image', 'wpecommerce-product-grid' ),
 				),
 				400 => array(
 					'type'    => 'checkbox',
 					'label'   => __( 'Darken background to improve readability', 'make-plus' ),
 					'name'    => 'darken',
-					'default' => ttfmake_get_section_default( 'darken', 'woocommerce-product-grid' ),
+					'default' => ttfmake_get_section_default( 'darken', 'wpecommerce-product-grid' ),
 				),
 				500 => array(
 					'type'    => 'select',
 					'name'    => 'background-style',
 					'label'   => __( 'Background style', 'make-plus' ),
-					'default' => ttfmake_get_section_default( 'background-style', 'woocommerce-product-grid' ),
-					'options' => ttfmake_get_section_choices( 'background-style', 'woocommerce-product-grid' ),
+					'default' => ttfmake_get_section_default( 'background-style', 'wpecommerce-product-grid' ),
+					'options' => ttfmake_get_section_choices( 'background-style', 'wpecommerce-product-grid' ),
 				),
 				600 => array(
 					'type'    => 'color',
 					'label'   => __( 'Background color', 'make-plus' ),
 					'name'    => 'background-color',
 					'class'   => 'ttfmake-text-background-color ttfmake-configuration-color-picker',
-					'default' => ttfmake_get_section_default( 'background-color', 'woocommerce-product-grid' ),
+					'default' => ttfmake_get_section_default( 'background-color', 'wpecommerce-product-grid' ),
 				),
 			)
 		);
@@ -725,7 +652,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 	public function save_product_grid( $data ) {
 		// Checkbox fields will not be set if they are unchecked.
 		$checkboxes = array( 'thumb', 'rating', 'price', 'addcart' );
-		if ( get_option( 'woocommerce_enable_review_rating' ) === 'no' ) {
+		if ( get_option( 'wpecommerce_enable_review_rating' ) === 'no' ) {
 			unset( $checkboxes['rating'] );
 		}
 		foreach ( $checkboxes as $key ) {
@@ -736,21 +663,21 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 
 		// Data to sanitize and save
 		$defaults = array(
-			'title' => ttfmake_get_section_default( 'title', 'woocommerce-product-grid' ),
-			'background-image' => ttfmake_get_section_default( 'background-image', 'woocommerce-product-grid' ),
-			'darken' => ttfmake_get_section_default( 'darken', 'woocommerce-product-grid' ),
-			'background-style' => ttfmake_get_section_default( 'background-style', 'woocommerce-product-grid' ),
-			'background-color' => ttfmake_get_section_default( 'background-color', 'woocommerce-product-grid' ),
-			'full-width' => ttfmake_get_section_default( 'full-width', 'woocommerce-product-grid' ),
-			'columns' => ttfmake_get_section_default( 'columns', 'woocommerce-product-grid' ),
-			'type' => ttfmake_get_section_default( 'type', 'woocommerce-product-grid' ),
-			'taxonomy' => ttfmake_get_section_default( 'taxonomy', 'woocommerce-product-grid' ),
-			'sortby' => ttfmake_get_section_default( 'sortby', 'woocommerce-product-grid' ),
-			'count' => ttfmake_get_section_default( 'count', 'woocommerce-product-grid' ),
-			'thumb' => ttfmake_get_section_default( 'thumb', 'woocommerce-product-grid' ),
-			'rating' => ttfmake_get_section_default( 'rating', 'woocommerce-product-grid' ),
-			'price' => ttfmake_get_section_default( 'price', 'woocommerce-product-grid' ),
-			'addcart' => ttfmake_get_section_default( 'addcart', 'woocommerce-product-grid' ),
+			'title' => ttfmake_get_section_default( 'title', 'wpecommerce-product-grid' ),
+			'background-image' => ttfmake_get_section_default( 'background-image', 'wpecommerce-product-grid' ),
+			'darken' => ttfmake_get_section_default( 'darken', 'wpecommerce-product-grid' ),
+			'background-style' => ttfmake_get_section_default( 'background-style', 'wpecommerce-product-grid' ),
+			'background-color' => ttfmake_get_section_default( 'background-color', 'wpecommerce-product-grid' ),
+			'full-width' => ttfmake_get_section_default( 'full-width', 'wpecommerce-product-grid' ),
+			'columns' => ttfmake_get_section_default( 'columns', 'wpecommerce-product-grid' ),
+			'type' => ttfmake_get_section_default( 'type', 'wpecommerce-product-grid' ),
+			'taxonomy' => ttfmake_get_section_default( 'taxonomy', 'wpecommerce-product-grid' ),
+			'sortby' => ttfmake_get_section_default( 'sortby', 'wpecommerce-product-grid' ),
+			'count' => ttfmake_get_section_default( 'count', 'wpecommerce-product-grid' ),
+			'thumb' => ttfmake_get_section_default( 'thumb', 'wpecommerce-product-grid' ),
+			'rating' => ttfmake_get_section_default( 'rating', 'wpecommerce-product-grid' ),
+			'price' => ttfmake_get_section_default( 'price', 'wpecommerce-product-grid' ),
+			'addcart' => ttfmake_get_section_default( 'addcart', 'wpecommerce-product-grid' ),
 		);
 		$parsed_data = wp_parse_args( $data, $defaults );
 
@@ -766,7 +693,7 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 		$clean_data['darken'] = absint( $parsed_data['darken'] );
 
 		// Background style
-		$clean_data['background-style'] = ttfmake_sanitize_section_choice( $parsed_data['background-style'], 'background-style', 'woocommerce-product-grid' );
+		$clean_data['background-style'] = ttfmake_sanitize_section_choice( $parsed_data['background-style'], 'background-style', 'wpecommerce-product-grid' );
 
 		// Background color
 		$clean_data['background-color'] = maybe_hash_hex_color( $parsed_data['background-color'] );
@@ -775,21 +702,21 @@ final class MAKEPLUS_Component_WPECommerce_Setup extends MAKEPLUS_Util_Modules i
 		$clean_data['full-width'] = absint( $parsed_data['full-width'] );
 
 		// Columns
-		$clean_data['columns'] = ttfmake_sanitize_section_choice( $parsed_data['columns'], 'columns', 'woocommerce-product-grid' );
+		$clean_data['columns'] = ttfmake_sanitize_section_choice( $parsed_data['columns'], 'columns', 'wpecommerce-product-grid' );
 
 		// Type
-		$clean_data['type'] = ttfmake_sanitize_section_choice( $parsed_data['type'], 'type', 'woocommerce-product-grid' );
+		$clean_data['type'] = ttfmake_sanitize_section_choice( $parsed_data['type'], 'type', 'wpecommerce-product-grid' );
 
 		// Taxonomy
-		$clean_data['taxonomy'] = ttfmake_sanitize_section_choice( $parsed_data['taxonomy'], 'taxonomy', 'woocommerce-product-grid' );
+		$clean_data['taxonomy'] = ttfmake_sanitize_section_choice( $parsed_data['taxonomy'], 'taxonomy', 'wpecommerce-product-grid' );
 
 		// Sort
-		$clean_data['sortby'] = ttfmake_sanitize_section_choice( $parsed_data['sortby'], 'sortby', 'woocommerce-product-grid' );
+		$clean_data['sortby'] = ttfmake_sanitize_section_choice( $parsed_data['sortby'], 'sortby', 'wpecommerce-product-grid' );
 
 		// Count
 		$clean_count = (int) $parsed_data['count'];
 		if ( $clean_count < 1 && -1 !== $clean_count ) {
-			$clean_data['count'] = ttfmake_get_section_default( 'count', 'woocommerce-product-grid' );
+			$clean_data['count'] = ttfmake_get_section_default( 'count', 'wpecommerce-product-grid' );
 		} else {
 			$clean_data['count'] = $clean_count;
 		}

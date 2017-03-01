@@ -4,12 +4,10 @@
  */
 
 /**
- * Class MAKEPLUS_Component_WooCommerce_Shortcode
+ * Class MAKEPLUS_Component_WPECommerce_Shortcode
  *
- * Display a grid of WooCommerce products based on criteria specified in shortcode parameters.
+ * Display a grid of WPECommerce products based on criteria specified in shortcode parameters.
  *
- * @since 1.0.0.
- * @since 1.7.0. Changed class name from TTFMP_WooCommerce_Shortcode
  */
 class MAKEPLUS_Component_WPECommerce_Shortcode extends MAKEPLUS_Util_Modules implements MAKEPLUS_Component_WPECommerce_ShortcodeInterface {
 	/**
@@ -248,7 +246,7 @@ class MAKEPLUS_Component_WPECommerce_Shortcode extends MAKEPLUS_Util_Modules imp
 		 * @param array $args    Query args
 		 * @param array $atts    Shortcode attributes
 		 */
-		return apply_filters( 'makeplus_woocommerce_product_grid_query_args', $args, $atts );
+		return apply_filters( 'makeplus_wpecommerce_product_grid_query_args', $args, $atts );
 	}
 
 	/**
@@ -277,75 +275,74 @@ class MAKEPLUS_Component_WPECommerce_Shortcode extends MAKEPLUS_Util_Modules imp
 		// Collect filters to remove
 		$remove = array();
 
-		// Product image
-		if ( false === (bool) absint( $atts['thumb'] ) ) {
-			$remove[] = array(
-				'type'     => 'action',
-				'hook'     => 'woocommerce_before_shop_loop_item_title',
-				'callback' => 'woocommerce_show_product_loop_sale_flash',
-			);
-			$remove[] = array(
-				'type'     => 'action',
-				'hook'     => 'woocommerce_before_shop_loop_item_title',
-				'callback' => 'woocommerce_template_loop_product_thumbnail',
-			);
-		} else {
-			// Change the image size used for the product image
-			$add[] = array(
-				'type'     => 'action',
-				'hook'     => 'woocommerce_before_shop_loop_item_title',
-				'callback' => array( $this, 'product_grid_thumbnail' ),
-			);
-			$remove[] = array(
-				'type'     => 'action',
-				'hook'     => 'woocommerce_before_shop_loop_item_title',
-				'callback' => 'woocommerce_template_loop_product_thumbnail',
-			);
-		}
-		// Rating
-		if ( false === (bool) absint( $atts['rating'] ) ) {
-			$remove[] = array(
-				'type'     => 'action',
-				'hook'     => 'woocommerce_after_shop_loop_item_title',
-				'callback' => 'woocommerce_template_loop_rating',
-			);
-		}
-		// Price
-		if ( false === (bool) absint( $atts['price'] ) ) {
-			$remove[] = array(
-				'type'     => 'action',
-				'hook'     => 'woocommerce_after_shop_loop_item_title',
-				'callback' => 'woocommerce_template_loop_price',
-			);
-		}
-		// Add To Cart
-		if ( false === (bool) absint( $atts['addcart'] ) ) {
-			$remove[] = array(
-				'type'     => 'action',
-				'hook'     => 'woocommerce_after_shop_loop_item',
-				'callback' => 'woocommerce_template_loop_add_to_cart',
-			);
-		}
+//		// Product image
+//		if ( false === (bool) absint( $atts['thumb'] ) ) {
+//			$remove[] = array(
+//				'type'     => 'action',
+//				'hook'     => 'woocommerce_before_shop_loop_item_title',
+//				'callback' => 'woocommerce_show_product_loop_sale_flash',
+//			);
+//			$remove[] = array(
+//				'type'     => 'action',
+//				'hook'     => 'woocommerce_before_shop_loop_item_title',
+//				'callback' => 'woocommerce_template_loop_product_thumbnail',
+//			);
+//		} else {
+//			// Change the image size used for the product image
+//			$add[] = array(
+//				'type'     => 'action',
+//				'hook'     => 'woocommerce_before_shop_loop_item_title',
+//				'callback' => array( $this, 'product_grid_thumbnail' ),
+//			);
+//			$remove[] = array(
+//				'type'     => 'action',
+//				'hook'     => 'woocommerce_before_shop_loop_item_title',
+//				'callback' => 'woocommerce_template_loop_product_thumbnail',
+//			);
+//		}
+//		// Rating
+//		if ( false === (bool) absint( $atts['rating'] ) ) {
+//			$remove[] = array(
+//				'type'     => 'action',
+//				'hook'     => 'woocommerce_after_shop_loop_item_title',
+//				'callback' => 'woocommerce_template_loop_rating',
+//			);
+//		}
+//		// Price
+//		if ( false === (bool) absint( $atts['price'] ) ) {
+//			$remove[] = array(
+//				'type'     => 'action',
+//				'hook'     => 'woocommerce_after_shop_loop_item_title',
+//				'callback' => 'woocommerce_template_loop_price',
+//			);
+//		}
+//		// Add To Cart
+//		if ( false === (bool) absint( $atts['addcart'] ) ) {
+//			$remove[] = array(
+//				'type'     => 'action',
+//				'hook'     => 'woocommerce_after_shop_loop_item',
+//				'callback' => 'woocommerce_template_loop_add_to_cart',
+//			);
+//		}
 
 		// Adjust actions/filters
 		$this->adjust_hooks( $add, $remove );
 
 		// Run the loop
-//		woocommerce_product_loop_start();
+
 
 		while ( $query->have_posts() ) : $query->the_post();
 //			wc_get_template_part( 'content', 'product' );
 			include( 'sections/front-end-templates/product-grid.php' );
 		endwhile;
 
-//		woocommerce_product_loop_end();
 		wp_reset_postdata();
 
 		// Reset actions/filters
 		$this->reset_hooks( $this->added, $this->removed );
 
 		// Return the output
-		return '<div class="woocommerce container columns-' . esc_attr( $atts['columns'] ) . '">' . ob_get_clean() . '</div>';
+		return '<div class="wpecommerce container columns-' . esc_attr( $atts['columns'] ) . '">' . ob_get_clean() . '</div>';
 	}
 
 	/**
@@ -376,7 +373,7 @@ class MAKEPLUS_Component_WPECommerce_Shortcode extends MAKEPLUS_Util_Modules imp
 		 *
 		 * @param string $image_size    The name of the image size to use.
 		 */
-		$image_size = apply_filters( 'makeplus_woocommerce_product_grid_image_size', 'large' );
+		$image_size = apply_filters( 'makeplus_wpecommerce_product_grid_image_size', 'large' );
 
 		echo get_the_post_thumbnail( null, $image_size );
 	}
@@ -416,6 +413,6 @@ class MAKEPLUS_Component_WPECommerce_Shortcode extends MAKEPLUS_Util_Modules imp
 		 *
 		 * @param string $output
 		 */
-		return apply_filters( 'makeplus_woocommerce_product_grid_output', $output );
+		return apply_filters( 'makeplus_wpecommerce_product_grid_output', $output );
 	}
 }

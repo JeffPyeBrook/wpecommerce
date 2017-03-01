@@ -4,7 +4,7 @@
  */
 
 /**
- * Interface MAKEPLUS_Component_WooCommerce_ShortcodeInterface
+ * Interface MAKEPLUS_Component_WPECommerce_ShortcodeInterface
  *
  * @since 1.7.0.
  */
